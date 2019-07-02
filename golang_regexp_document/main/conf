@@ -1,0 +1,31 @@
+[id]
+#都是按id进行查找起始id
+start=4
+end=2146
+
+[mysql]
+#mysql连接信息
+ipaddr=192.168.1.28
+username=root
+password=Yang@123
+prot=3306
+database=web
+
+[store]
+#文档的存储路径，在此目录下创建响应的层级目录存放文档
+path=./content
+
+
+#[regexp_list_replace]
+#pater1="<br />:enter"
+#pater2= "&nbsp;:space"
+
+
+#[regexp_list_del]
+#pater1-1=
+#pater2-1=
+#pater3-1=
+#pater4-1=
+#pater5-1=
+#pater6-1=
+#pater7-1=

@@ -1,0 +1,15 @@
+[id]
+#都是按id进行查找起始id
+start=2
+end=26147
+
+[mysql]
+#mysql连接信息
+ipaddr=192.168.2.250
+username=root
+password=gaopeng
+prot=3306
+database=xiaoshuo
+
+[concurrency]
+concur=1

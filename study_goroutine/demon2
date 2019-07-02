@@ -1,0 +1,64 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"path/filepath"
+	"sync"
+)
+var concurrenc int
+var filenamech = make(chan string,10)
+
+func main()  {
+	pathname,err := filepath.Abs("D:\\a")
+	if err != nil  {
+		fmt.Println("path error")
+		return
+	}
+	concurrenc = 5
+	wg := sync.WaitGroup{}
+	wg.Add(concurrenc+1)
+	go func(wg *sync.WaitGroup,filenamech chan string) {
+		GetAllFile(pathname,filenamech)
+		close(filenamech)
+		wg.Done()
+	}(&wg,filenamech)
+	for i := 0;i < concurrenc; i++  {
+		go func(wg *sync.WaitGroup,filenamech chan string) {
+			for {
+				filename,isclose := <- filenamech
+				if !isclose {
+					break
+				}
+				dosomewrork(filename)
+			}
+			wg.Done()
+		}(&wg,filenamech)
+	}
+	wg.Wait()
+	fmt.Println("finish")
+}
+
+
+func GetAllFile(pathname string,fn_ch chan string) {
+	rd, err := ioutil.ReadDir(pathname)
+	if err != nil {
+		fmt.Println("read dir fail:", err)
+	}
+	for _, fi := range rd {
+		if fi.IsDir() {
+			fullDir := pathname + "/" + fi.Name()
+			GetAllFile(fullDir,fn_ch)
+			if err != nil {
+				fmt.Println("read dir fail:", err)
+			}
+		} else {
+			fullName := pathname + "/" + fi.Name()
+			fn_ch <- fullName
+		}
+	}
+}
+
+func dosomewrork(fname string)  {
+	fmt.Println(fname)
+}
