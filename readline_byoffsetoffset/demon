@@ -1,0 +1,89 @@
+package getcontent
+
+import (
+	"database/sql"
+	"github.com/yangyouwei/xiaoshuo_content/read_conf"
+)
+
+type booksinfo struct {
+	Id int	`db:"id"`
+	Sourcesfilename string `db:"Sourcesfilename"`
+	Chapterdone int `db:"chapterdone"`
+}
+
+type chapter struct {
+	BookId int `db:"booksId"`
+	ChapterId int `db:"chapterId"`
+	Content string `db:"content"`
+	Size string `db:"size"`
+	Chapterline int64 `db:"chapterlines"`
+}
+
+type LineOffsetstr struct {
+	start int64
+	end int64
+}
+var booksinfo_ch = make(chan booksinfo)
+var contentoffset []int
+var LineContent =make(chan string)
+var LineOffset =make(chan LineOffsetstr)
+var AddLineslice []string
+
+func GetContent(db *sql.DB)  {
+	concurrent := read_conf.Main_str.Concurrent
+	filespaht := read_conf.Main_str.Filepath
+
+}
+
+func getbooks()  {
+
+}
+
+func GetChapterContent(fp string) {
+	//开始行数
+	var n int64
+	n = 1
+	//读取单行内容写入到chan
+	go readlines(fp)
+	//创建个切片
+	lineslice := AddLineslice
+	for {
+		c := <- LineOffset
+		s := <- LineContent
+		for n > c.start&&n <c.end  {
+			getchaptercontent(s,&lineslice)
+			break
+		}
+		n++
+		continue
+	}
+	content := addlines(&lineslice)
+	updatechapter(content)
+}
+
+//按行读取，写入到chan
+func readlines(fp string)  {
+
+}
+
+//正则替换标签
+func replaceContent(s string) (rs string)  {
+
+	return rs
+}
+
+//将符合条件的行写入切片
+func getchaptercontent(s string,ls *[]string)  {
+
+}
+
+//将切片组合为字符串
+func addlines(ls *[]string) string {
+
+	return
+}
+
+//将字符串（章节内容）写入数据库
+func updatechapter(s string)  {
+
+}
