@@ -27,3 +27,14 @@ func main()  {
 	_ = json.Indent(&str, []byte(b), "", "	")
 	fmt.Println(str.String())
 }
+
+
+// func main()  {
+// 	var l Lines
+// 	l.Lines = append(l.Lines,Line{Ipaddr:"192.168.2.100：443",Comment:"美国"})
+// 	b,err := json.MarshalIndent(l,"","	")
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	fmt.Println(string(b))
+// }
