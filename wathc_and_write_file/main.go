@@ -29,3 +29,5 @@ func main()  {
 		f.Write(buf)
 	}
 }
+
+//大文件读写  bufio.NewReader  
