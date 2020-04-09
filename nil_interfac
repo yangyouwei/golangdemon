@@ -1,0 +1,21 @@
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main(){
+	sdfasdf(testset)
+}
+
+func testset()  {
+	fmt.Println("setest")
+}
+
+
+func sdfasdf(a interface{})  {
+	fmt.Println(reflect.TypeOf(a))
+	b := a.(func())
+	b()
+}
