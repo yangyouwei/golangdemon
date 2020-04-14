@@ -20,6 +20,7 @@ var Users = make(map[string]UserInfo)
 
 func main() {
 	var serverport string = "8000"
+//打印log
 	log.Println("server is listen on 0.0.0.0:8000")
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api").Subrouter()
@@ -31,6 +32,7 @@ func main() {
 	s.HandleFunc("/SETUserInfo_bodykv", SETUserInfo_bodykv).Methods("POST")
 	s.HandleFunc("/SETUserInfo_bodyjson", SETUserInfo_bodyjson).Methods("POST")
 
+//server开始监听
 	err := http.ListenAndServe(":"+serverport, r)
 	if err != nil {
 		fmt.Println(err)
@@ -38,20 +40,23 @@ func main() {
 	}
 }
 
+
 func GETUsrInfo(w http.ResponseWriter, r *http.Request) {
 	CrossDomain(w, r)
+// 解析url
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+// 获取解析出来的kv ，根据k获取值
 	name := r.Form.Get("name")
 	if name == "" {
 		fmt.Println("args err： name is none")
 		w.Write([]byte("please give name to serarch user info."))
 		return
 	}
-
+// 判断用户是否存在，用户存在返回用户信息
 	if _, ok := Users[name]; ok {
 		auser := Users[name]
 		auserjson, err := json.Marshal(auser)
@@ -61,6 +66,7 @@ func GETUsrInfo(w http.ResponseWriter, r *http.Request) {
 		w.Write(auserjson)
 		return
 	} else {
+// 用户不存在，返回用户不存在。
 		w.Write([]byte("user is not exsit."))
 		return
 	}
@@ -86,6 +92,7 @@ func SETUserInfo_urlargs(w http.ResponseWriter, r *http.Request)  {
 func SETUserInfo_bodykv(w http.ResponseWriter, r *http.Request) {
 	CrossDomain(w, r)
 	auser := UserInfo{}
+// 解析post  form-data格式数据。
 	auser.Name = r.PostFormValue("name")
 	age, err := strconv.Atoi(r.PostFormValue("age"))
 	if err != nil {
@@ -97,6 +104,7 @@ func SETUserInfo_bodykv(w http.ResponseWriter, r *http.Request) {
 
 	auser.Age = age
 	auser.Address = r.PostFormValue("address")
+// 添加用户到map中
 	Users[auser.Name] = auser
 	w.Write([]byte("user set is ok"))
 }
@@ -110,6 +118,7 @@ func SETUserInfo_bodyjson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	auser := UserInfo{}
+// 将json数据解析到结构体实例中
 	err = json.Unmarshal(userjson, &auser)
 	if err != nil {
 		fmt.Println(err)
